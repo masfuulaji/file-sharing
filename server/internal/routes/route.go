@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/masfuulaji/file-sharing/internal/app/handler"
 )
 
 type Response struct {
@@ -28,4 +29,7 @@ func SetupRoutes(r *chi.Mux) {
 		}
 		json.NewEncoder(w).Encode(response)
 	})
+
+	r.Post("/upload", handler.UploadHandler)
+	r.Get("/download/{file}", handler.DownloadHandler)
 }
