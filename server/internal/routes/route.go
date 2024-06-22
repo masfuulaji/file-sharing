@@ -2,10 +2,12 @@ package routes
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/masfuulaji/file-sharing/internal/app/handler"
+	"github.com/masfuulaji/file-sharing/internal/database"
 )
 
 type Response struct {
@@ -14,12 +16,13 @@ type Response struct {
 }
 
 func SetupRoutes(r *chi.Mux) {
+	_, err := database.ConnectDB()
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Hello World!"))
-	})
-
-	r.Get("/about", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello Ell!"))
 	})
 
 	r.Get("/json", func(w http.ResponseWriter, r *http.Request) {
