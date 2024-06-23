@@ -16,7 +16,7 @@ type Response struct {
 }
 
 func SetupRoutes(r *chi.Mux) {
-	_, err := database.ConnectDB()
+	db, err := database.ConnectDB()
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -35,4 +35,13 @@ func SetupRoutes(r *chi.Mux) {
 
 	r.Post("/upload", handler.UploadHandler)
 	r.Get("/download/{file}", handler.DownloadHandler)
+
+	userHandler := handler.NewUserHandler(db.DB)
+	r.Route("/user", func(r chi.Router) {
+		r.Get("/", userHandler.GetUsers)
+		r.Get("/{id}", userHandler.GetUser)
+		r.Post("/", userHandler.CreateUser)
+		r.Put("/{id}", userHandler.UpdateUser)
+		r.Delete("/{id}", userHandler.DeleteUser)
+	})
 }

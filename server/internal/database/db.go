@@ -12,7 +12,7 @@ type DB struct {
 }
 
 func ConnectDB() (*DB, error) {
-	db, err := sqlx.Connect("postgres", "host=db port=5432 user=postgres dbname=postgres password=postgres sslmode=disable")
+	db, err := sqlx.Connect("postgres", "host=db port=5432 user=postgres dbname=file_sharing password=postgres sslmode=disable")
 	if err != nil {
 		return nil, err
 	}
