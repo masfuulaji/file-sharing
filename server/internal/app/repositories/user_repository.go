@@ -15,6 +15,7 @@ type UserRepository interface {
 	GetUsers() ([]models.User, error)
 	UpdateUser(user models.User, id string) error
 	DeleteUser(id string) error
+	GetUserByUsername(username string) (models.User, error)
 }
 
 type UserRepositoryImpl struct {
@@ -53,6 +54,15 @@ func (u *UserRepositoryImpl) GetUsers() ([]models.User, error) {
 		return users, err
 	}
 	return users, nil
+}
+
+func (u *UserRepositoryImpl) GetUserByUsername(username string) (models.User, error) {
+	query := "SELECT * FROM users WHERE username = $1 AND deleted_at IS NULL"
+	err := u.db.Get(&user, query, username)
+	if err != nil {
+		return user, err
+	}
+	return user, nil
 }
 
 func (u *UserRepositoryImpl) UpdateUser(user models.User, id string) error {
