@@ -1,13 +1,13 @@
 package routes
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/masfuulaji/file-sharing/internal/app/handler"
 	"github.com/masfuulaji/file-sharing/internal/database"
+	"github.com/masfuulaji/file-sharing/internal/utils"
 )
 
 type Response struct {
@@ -25,12 +25,10 @@ func SetupRoutes(r *chi.Mux) {
 		w.Write([]byte("Hello World!"))
 	})
 
-	r.Get("/json", func(w http.ResponseWriter, r *http.Request) {
-		response := Response{
-			Message: "Allo",
-			Status:  200,
-		}
-		json.NewEncoder(w).Encode(response)
+	loginHandler := handler.NewLoginHandler(db.DB)
+	r.Post("/login", loginHandler.Login)
+	r.With(utils.AuthMiddleware).Get("/protected", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Protected!"))
 	})
 
 	r.Post("/upload", handler.UploadHandler)
