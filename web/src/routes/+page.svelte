@@ -1,15 +1,17 @@
 <script>
+  import axios from "axios";
+
   const fetchImage = (async () => {
-    const response = await fetch("http://localhost:3000/json");
-    return await response.json();
+    const response = await axios.get("http://localhost:3000/");
+    return response.data;
   })();
 </script>
 
 {#await fetchImage}
   <p>...waiting</p>
 {:then data}
-  <p>{data.message}</p>
-  <p>{data.status}</p>
+  <p class="underline">{data.message}</p>
 {:catch error}
   <p>An error occurred!</p>
+  <p>{error.message}</p>
 {/await}
