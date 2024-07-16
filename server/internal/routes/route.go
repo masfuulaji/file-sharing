@@ -22,7 +22,7 @@ func SetupRoutes(r *chi.Mux) {
 	}
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello World!"))
+		utils.RespondWithJSON(w, http.StatusOK, map[string]string{"message": "Welcome"})
 	})
 
 	loginHandler := handler.NewLoginHandler(db.DB)
