@@ -1,7 +1,7 @@
 <script>
     import axios from "axios";
 
-    import ButtonPrimary from "../../components/items/buttonPrimary.svelte";
+    import ButtonPrimary from "../../../components/items/buttonPrimary.svelte";
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
 

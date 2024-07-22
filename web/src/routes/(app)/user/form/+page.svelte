@@ -1,5 +1,4 @@
 <script>
-    import { redirect } from "@sveltejs/kit";
     import { page } from "$app/stores";
     import axios from "axios";
     import { onMount } from "svelte";
@@ -33,11 +32,6 @@
         email: "",
         password: "",
     };
-
-    async function fetchUser() {
-        const response = await axios.get("http://localhost:3000/user");
-        return response.data;
-    }
 
     async function saveUser() {
         if (id) {

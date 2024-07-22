@@ -27,9 +27,7 @@ func SetupRoutes(r *chi.Mux) {
 
 	loginHandler := handler.NewLoginHandler(db.DB)
 	r.Post("/login", loginHandler.Login)
-	r.With(utils.AuthMiddleware).Get("/protected", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Protected!"))
-	})
+	r.With(utils.AuthMiddleware).Get("/isLogin", loginHandler.IsLogin)
 
 	r.Post("/upload", handler.UploadHandler)
 	r.Get("/download/{file}", handler.DownloadHandler)

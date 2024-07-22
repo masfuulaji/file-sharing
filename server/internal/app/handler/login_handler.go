@@ -68,7 +68,8 @@ func (u *LoginHandlerImpl) Login(w http.ResponseWriter, r *http.Request) {
 		Name:     "token",
 		Value:    tokenString,
 		Expires:  expirationTime,
-		HttpOnly: true,
+		Path:     "/",
+		SameSite: http.SameSiteLaxMode,
 	})
 
 	utils.RespondWithJSON(w, http.StatusOK, map[string]string{"message": "Login successful"})
@@ -81,4 +82,8 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 		Expires: time.Now().Add(-1 * time.Hour),
 	})
 	utils.RespondWithJSON(w, http.StatusOK, map[string]string{"message": "Logout successful"})
+}
+
+func (u *LoginHandlerImpl) IsLogin(w http.ResponseWriter, r *http.Request) {
+	utils.RespondWithJSON(w, http.StatusOK, map[string]string{"message": "You are logged in"})
 }
