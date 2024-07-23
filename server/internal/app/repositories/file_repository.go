@@ -26,10 +26,10 @@ func NewFileRepository(db *sqlx.DB) *FileRepositoryImpl {
 }
 
 func (u *FileRepositoryImpl) CreateFile(file models.File) error {
-	query := "INSERT INTO files (file_name, user_id, created_at, updated_at) VALUES ($1, $2, $3, $4)"
+	query := "INSERT INTO files (file_name, file_path, user_id, created_at, updated_at) VALUES ($1, $2, $3, $4, $5)"
 	createdAt := time.Now().Format("2006-01-02 15:04:05")
 	updatedAt := time.Now().Format("2006-01-02 15:04:05")
-	_, err := u.db.Exec(query, file.FileName, file.UserId, createdAt, updatedAt)
+	_, err := u.db.Exec(query, file.FileName, file.FilePath, file.UserId, createdAt, updatedAt)
 	if err != nil {
 		return err
 	}
@@ -56,9 +56,9 @@ func (u *FileRepositoryImpl) GetFiles() ([]models.File, error) {
 }
 
 func (u *FileRepositoryImpl) UpdateFile(file models.File, id string) error {
-	query := "UPDATE files SET file_name = $1, user_id = $2, updated_at = $3 WHERE id = $4"
+	query := "UPDATE files SET file_name = $1, updated_at = $2 WHERE id = $3"
 	updatedAt := time.Now().Format("2006-01-02 15:04:05")
-	_, err := u.db.Exec(query, file.FileName, file.UserId, updatedAt, id)
+	_, err := u.db.Exec(query, file.FileName, updatedAt, id)
 	if err != nil {
 		return err
 	}

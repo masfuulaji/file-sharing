@@ -29,8 +29,9 @@ func SetupRoutes(r *chi.Mux) {
 	r.Post("/login", loginHandler.Login)
 	r.With(utils.AuthMiddleware).Get("/isLogin", loginHandler.IsLogin)
 
-	r.Post("/upload", handler.UploadHandler)
-	r.Get("/download/{file}", handler.DownloadHandler)
+	uploadHandler := handler.NewUploadHandler(db.DB)
+	r.Post("/upload", uploadHandler.UploadFile)
+	r.Get("/download/{id}", uploadHandler.DownloadHandler)
 
 	userHandler := handler.NewUserHandler(db.DB)
 	r.Route("/user", func(r chi.Router) {
@@ -39,5 +40,14 @@ func SetupRoutes(r *chi.Mux) {
 		r.Post("/", userHandler.CreateUser)
 		r.Put("/{id}", userHandler.UpdateUser)
 		r.Delete("/{id}", userHandler.DeleteUser)
+	})
+
+	fileHandler := handler.NewFileHandler(db.DB)
+	r.Route("/file", func(r chi.Router) {
+		r.Get("/", fileHandler.GetFiles)
+		r.Get("/{id}", fileHandler.GetFile)
+		r.Post("/", fileHandler.CreateFile)
+		r.Put("/{id}", fileHandler.UpdateFile)
+		r.Delete("/{id}", fileHandler.DeleteFile)
 	})
 }
