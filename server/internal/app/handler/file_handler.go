@@ -16,6 +16,7 @@ type FileHandler interface {
 	DeleteFile(w http.ResponseWriter, r *http.Request)
 	GetFile(w http.ResponseWriter, r *http.Request)
 	GetFiles(w http.ResponseWriter, r *http.Request)
+	SwitchPublic(w http.ResponseWriter, r *http.Request)
 }
 
 type FileHandlerImpl struct {
@@ -97,4 +98,18 @@ func (f *FileHandlerImpl) GetFiles(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewEncoder(w).Encode(files)
+}
+
+func (f *FileHandlerImpl) SwitchPublic(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	err := f.fileRepository.SwitchPublic(id)
+	if err != nil {
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+	response := Response{
+		Message: "File updated successfully",
+		Status:  200,
+	}
+	json.NewEncoder(w).Encode(response)
 }

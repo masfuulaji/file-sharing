@@ -1,0 +1,1 @@
+ALTER TABLE permissions ADD COLUMN IF NOT EXISTS permission INTEGER

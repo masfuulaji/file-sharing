@@ -25,6 +25,11 @@
   };
 
   // @ts-ignore
+  const permissionFile = (id) => {
+    goto(`/file/permission?id=${id}`);
+  };
+
+  // @ts-ignore
   const deleteFile = async (id) => {
     await axios.delete(`http://localhost:3000/file/${id}`);
     files = await fetchFile();
@@ -38,22 +43,19 @@
         responseType: "blob",
       })
       .then((response) => {
-        const contentDisposition = response.headers["content-disposition"];
-        let fileName = "downloaded_file";
+        // create file link in browser's memory
+        const href = URL.createObjectURL(response.data);
 
-        if (contentDisposition) {
-          const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
-          if (fileNameMatch.length === 2) {
-            fileName = fileNameMatch[1];
-          }
-        }
-
-        const url = window.URL.createObjectURL(new Blob([response.data]));
+        // create "a" HTML element with href to file & click
         const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", fileName);
+        link.href = href;
+        link.setAttribute("download", "file.pdf"); //or any other extension
         document.body.appendChild(link);
         link.click();
+
+        // clean up "a" element & remove ObjectURL
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
       })
       .catch((err) => {
         alert("Unauthorized");
@@ -78,7 +80,7 @@
       {#if files != null && files.length > 0}
         {#each files as file}
           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            <td class="px-6 py-4">
+            <td class="px-6 py-4" width="50%">
               {file.file_name}
             </td>
             <td class="px-6 py-4">
@@ -87,6 +89,12 @@
                 on:click={() => downloadFile(file.id)}
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >Download</button
+              >
+              <button
+                type="button"
+                on:click={() => permissionFile(file.id)}
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >Permission</button
               >
               <button
                 type="button"

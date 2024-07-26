@@ -49,5 +49,16 @@ func SetupRoutes(r *chi.Mux) {
 		r.Post("/", fileHandler.CreateFile)
 		r.Put("/{id}", fileHandler.UpdateFile)
 		r.Delete("/{id}", fileHandler.DeleteFile)
+		r.Put("/switch_public/{id}", fileHandler.SwitchPublic)
+	})
+
+	permissionHandler := handler.NewPermissionHandler(db.DB)
+	r.Route("/permission", func(r chi.Router) {
+		r.Get("/", permissionHandler.GetPermissions)
+		r.Get("/{id}", permissionHandler.GetPermission)
+		r.Post("/", permissionHandler.CreatePermission)
+		r.Put("/{id}", permissionHandler.UpdatePermission)
+		r.Delete("/{id}", permissionHandler.DeletePermission)
+		r.Get("/user/{id}", permissionHandler.GetPermissionsByUser)
 	})
 }

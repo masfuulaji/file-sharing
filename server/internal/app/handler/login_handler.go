@@ -48,7 +48,7 @@ func (u *LoginHandlerImpl) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	expirationTime := time.Now().Add(5 * time.Minute)
+	expirationTime := time.Now().Add(10 * time.Hour)
 	claim := &Claims{
 		Id:       res.Id,
 		Username: res.Username,

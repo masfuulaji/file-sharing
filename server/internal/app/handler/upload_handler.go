@@ -105,7 +105,7 @@ func (u *UploadHandlerImpl) UploadFile(w http.ResponseWriter, r *http.Request) {
 
 	userId := claims.Id
 
-	err = u.fileRepository.CreateFile(models.File{FileName: header.Filename, FilePath: newFileName, UserId: strconv.Itoa(userId)})
+	err = u.fileRepository.CreateFile(models.File{FileName: header.Filename, FilePath: newFileName, IsPublic: false, UserId: strconv.Itoa(userId)})
 	if err != nil {
 		response := Response{
 			Message: err.Error(),
@@ -154,7 +154,7 @@ func (u *UploadHandlerImpl) DownloadHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	if file.UserId != strconv.Itoa(claims.Id) {
+	if file.UserId != strconv.Itoa(claims.Id) && !file.IsPublic {
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte("Unauthorized"))
 		return
